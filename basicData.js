@@ -1,5 +1,6 @@
 var h=window.innerHeight,
 	w=window.innerWidth,
+	radius=5,
 	margin={top:20,bottom:20,left:40,right:40};
 
 var svg=d3.select("body").append("svg")
@@ -51,6 +52,28 @@ svg.selectAll("circle")
 	.attr({
 		cx:function(d){return xScale(d.x);},
 		cy:function(d){return yScale(d.y);},
-		r:5,
+		r:radius,
 		fill:"black"
+	})
+	.on("mouseover",function(d,i){
+		d3.select(this).attr({
+			fill:"orange",
+			r:radius*2
+		});
+		svg.append("text")
+			.attr({
+				id:"t"+d.x+"-"+d.y+"-"+i,
+				x:function(){return xScale(d.x);},
+				y:function(){return xScale(d.y);}
+			})
+			.text(function(){
+				return [d.x,d.y];
+			})
+	})
+	.on("mouseout",function(d,i){
+		d3.select(this).attr({
+			fill:"black",
+			r:radius
+		});
+		d3.select("#t"+d.x+"-"+d.y+"-"+i).remove();
 	});
